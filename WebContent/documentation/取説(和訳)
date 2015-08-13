@@ -1,0 +1,205 @@
+# EPUB.JS 解説ドキュメント
+
+##メソッド
+
+・ePub(bookPath, options)
+
+新しいEPUBJS.Book()を作る
+bookPathはそのパスから書籍を読み取るオプショナルメソッドである
+----------------------javascript実装例----------------------------
+var Book = ePub("url/to/book/"); //デフォルトオプションの場合のjavascriptの実装例
+-----------------------------------------------------------------------------------
+
+-------------javascript実装例----------------------------
+var Book = ePub({ restore: true });
+Book.open("url/to/book/"); //書籍が後で開かれる
+----------------------------------------------------
+
+Optionsで選択できる項目は以下の通り:
+
+------------------javascript例---------------------------------
+{
+  bookPath : null, //書籍パス
+  version: 1, // Changing will cause stored Book information to be reloaded
+  restore: false, // epubのパース(解析)をスキップし、代わりにローカルストレージから読み取る
+  storage: false, // true (自動) または false (非自動) | override: 'ram', 'websqldatabase', 'indexeddb', 'filesystem'
+  spreads: true, // 二列表示
+  fixedLayout : false, //-- ページネーションをターンオフする
+  styles : {}, // epub用スタイル
+  width : false, //幅
+  height: false, //高さ
+}
+-----------------------------------------
+
+初期はrestoreをオンにするといいかもしれない。
+幅と高さは含まれる要素の次元にセットされる。
+
+----------------javascript実装例---------------------
+var Book = ePub("url/to/book/", { restore: true });
+-----------------------------------------------------------
+
+以降の例はBookという名のePub変数を使用する
+
+・ Book.open(bookPath)
+
+与えられたパスにおける書籍を開きパースする
+
+----------------Book.openに関するjavascript例------------------
+var Book = ePub({ restore: true });
+Book.open("url/to/book/"); // 後で書籍が開かれる
+--------------------------------------------------------------
+
+書籍はepubで圧縮できる。
+これらのハンドリングに関してはセクションXを参照してください
+
+------------epub圧縮ファイルに関するjavascript例-------------
+Book.open("url/to/book.epub");
+--------------------------------------------------------------
+
+
+・Book.renderTo(element)
+
+要素として書籍描写要素を含むiframeを付加する。
+最初の章が読み込まれた後描写オブジェクトを返す
+
+-------------javascript実装例------------------
+var Book = ePub("url/to/book/", { restore: true });
+var $el = document.getElementById("div-id");
+Book.renderTo($el);
+-------------------------------------------
+
+renderTo は要素idを文字列として取得できる.
+
+------------javascript実装例---------------
+var Book = ePub("url/to/book/");
+Book.renderTo("div-id");
+------------------------------------------
+
+・ Book.nextPage()
+・ Book.prevPage()
+
+ページを進める(next)・戻す(prev)
+
+その章の最初か最後のページなら次の章に移る
+
+-----------html実装例------------------------
+<div onclick="Book.prevPage();">‹</div>
+<div onclick="Book.nextPage();">›</div>
+---------------------------------------------
+
+書籍が未描写ならページ変更は無効
+
+・ Book.displayChapter(chap, end)
+
+与えられたspine要素の章またはepubCFI文字列を読み込む
+与えられた章が読み込まれた後、描写をもってプロミスを返す
+
+--------javascript実装例---------------------------------
+Book.displayChapter('/6/4[chap01ref]!/4[body01]/10');
+---------------------------------------------------------
+
+Endをtrueに設定することでその章の最終ページへ
+
+---------javascript実装例----------------------
+Book.displayChapter(3, true);
+----------------------------------------------
+
+・Book.goto(url)
+
+与えられたURLの書籍・章を読み込む
+与えられた章の描写後、描写を持ってプロミスを返す
+
+-----------javascript実装例-----------------------
+var skip = Book.goto("chapter_001.xhtml");
+skip.then(function(){
+	console.log("On Chapter 1");
+})
+-----------------------------------------------------
+
+これは特定の章へのリンク機能を持った「目次」を作る際によく使われる
+
+・Book.setStyle(style, val, prefixed)
+
+描写された書籍のボディ要素にスタイルを加える
+一般的な用法の一つはフォントサイズ上昇.
+
+------------javascript実装例----------------------
+Book.setStyle("font-size", "1.2em");
+------------------------------------------------
+
+・Book.removeStyle(style)
+
+描写された書籍からスタイルを取り除く
+
+・Book.destroy()
+
+付加されたiframeを取り除き、イベントリスナをクリーンする
+
+
+### プロミス
+
+・Book.getMetadata()
+
+----------javascript実装例--------------------------------
+Book.getMetadata().then(function(meta){
+    document.title = meta.bookTitle+" – "+meta.creator;
+});
+-----------------------------------------------------------
+
+・ Book.getToc()
+
+------------javascript実装例--------------------------------
+Book.getToc().then(function(toc){
+	console.log(toc);
+});
+------------------------------------------------------------
+
+## Events
+
+book:ready
+
+book:stored
+
+book:online
+
+book:offline
+
+book:pageChanged
+-------------javascript---------------------
+{
+  anchorPage: 2
+  percentage: 0.5
+  pageRange: [1, 2, 3]
+}
+------------------------------------------------
+
+現在描画されているページを報告する。
+書籍はページリストを持たなければならない
+--------javascript-------------------------------
+book.on('book:pageChanged', function(location){
+    console.log(location.anchorPage, location.pageRange)
+});
+-----------------------------------------------------
+
+renderer:resized
+
+renderer:chapterDisplayed
+
+renderer:chapterUnloaded
+
+renderer:locationChanged
+-------------------javascript--------------------
+  "epubcfi(...)"
+------------------------------------------------
+現在描写しているロケーションを報告する
+現在のロケーションの描写の復旧に使われる。
+以下と同じ
+`book.renderer.currentLocationCfi()`
+
+------------javascript---------------------------------
+book.on('renderer:locationChanged', function(locationCfi){
+    console.log(locationCfi)
+});
+-----------------------------------------------------------
+
+renderer:visibleRangeChanged

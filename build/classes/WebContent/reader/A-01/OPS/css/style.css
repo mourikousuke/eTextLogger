@@ -1,0 +1,30 @@
+@font-face
+{
+font-family:"msyh";
+src:url("../Fonts/EmbedFont.ttf");
+}
+@font-face {
+font-family:"cnepub";
+src:url(res:///opt/sony/ebook/FONT/tt0011m_.ttf), url(res:///tt0011m_.ttf);
+}
+body {
+font-family:"cnepub", serif;
+font-family: "msyh";
+margin: 0px;
+}
+p {
+padding: 0em;
+margin: 0px;
+-webkit-margin-before: 0em;
+-webkit-margin-after: 0em;
+}
+div p span {
+vertical-align: top;
+}
+table {
+border-collapse: collapse;
+table-layout: fixed;
+}
+td {
+padding: 0px;
+}
