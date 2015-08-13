@@ -1,11 +1,15 @@
 <!DOCTYPE html>
 <HTML>
 <HEAD>
-<TITLE>uploaded</TITLE>
-<meta http-equiv="refresh" content="10;URL=../index.php">
+<meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <title>ePub Uploader</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, user-scalable=no">
+        <meta name="apple-mobile-web-app-capable" content="yes">
 </HEAD>
 <BODY>
-
+<h1>ePub Uploader</h1>
 <?php
 	// path and file name
 	$uploadedFileName = $_FILES["epub"]["name"];
@@ -40,11 +44,12 @@
     	rmdir($path);
 	}
 
-
+	echo "---------------------------------------------------------<br>";
 	// upload
 	echo "uploading \" $uploadedFileName \" ...<br> ";
 	if(extOut($uploadedFileName) != "epub"){
-		echo "Uploading is canceled.<br>You didn't choose any file or the file you selected is not an epub file.<br>";
+		echo "<font color=\"red\">Error. Check the following points :<br></font>";
+		echo "[1] file size (up to 4MB)<br>[2] extension (must be .epub)<br> [3] Did you choose any file?<br>";
 		//header("Location: ../index.php");
 	}else{
 		if (is_uploaded_file($uploadedTmpName)) {
@@ -54,7 +59,7 @@
             	//chmod("" . $_FILES["epub"]["name"], 0777);
             	copy($epubUploadPath, $zipUploadPath);
 
-            	echo "The file is uploaded correctly.<br>";
+            	echo "<font color=\"green\">The file is uploaded correctly.<br></font>";
 
             	//unzip
     			if(file_exists("../books/".$_FILES["epub"]["name"]))
@@ -70,8 +75,10 @@
     	}
     }
 
-    echo "You will be redirected to the index page in 10 seconds.<br>";
-	echo "<a href=\"../index.php\">You can back to the index page soon by clicking here.</a><br>";
+	echo "---------------------------------------------------------<br>";
+	echo "<a href=\"../index.php\">[1] Click here to go back to index page.</a><br>";
+	echo "<a href=\"uploader.php\">[2] Click here to upload another epub file.</a><br>";
+	echo "<a href=\"uploader.php\">[3] Click here to check an epub index.</a><br>";
 
 ?>
 

@@ -19,8 +19,8 @@
           }
 
           #wrapper {
-            width: 480px;
-            height: 640px;
+            width: 900px;
+            height: 700px;
             overflow: hidden;
             border: 1px solid #ccc;
             margin: 20px auto;
@@ -29,8 +29,8 @@
           }
 
           #area {
-            width: 480px;
-            height: 650px;
+            width: 900px;
+            height: 900px;
             margin: -5px auto;
             -moz-box-shadow:      inset 10px 0 20px rgba(0,0,0,.1);
             -webkit-box-shadow:   inset 10px 0 20px rgba(0,0,0,.1);
@@ -71,8 +71,8 @@
             //var paramName = decodeURIComponent( element[ 0 ] );
             var paramValue = decodeURIComponent( element[ 1 ] );
         	var Book = ePub("../books/unzipped/"+paramValue+"/", {
-        		width: 400,
-        		height: 600,
+        		width: 768,
+        		height: 1024,
         		spreads : false
         	});
 
@@ -85,7 +85,6 @@
        	<div id="main">
     		<div id="prev" onclick="Book.prevPage();" class="arrow"><</div>
     		<div id="wrapper">
-    			<input type="button" onclick="getText();" value="test">
     			<div id = "area"></div>
     		</div>
     		<div id="next" onclick="Book.nextPage();" class="arrow">></div>
