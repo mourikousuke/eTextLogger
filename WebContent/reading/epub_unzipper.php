@@ -59,7 +59,7 @@
             	//chmod("" . $_FILES["epub"]["name"], 0777);
             	copy($epubUploadPath, $zipUploadPath);
 
-            	echo "<font color=\"green\">The file is uploaded correctly.<br></font>";
+            	echo "<font color=\"green\">File uploading is finished successfully.<br></font>";
 
             	//unzip
     			if(file_exists("../books/".$_FILES["epub"]["name"]))
@@ -78,7 +78,7 @@
 	echo "---------------------------------------------------------<br>";
 	echo "<a href=\"../index.php\">[1] Click here to go back to index page.</a><br>";
 	echo "<a href=\"uploader.php\">[2] Click here to upload another epub file.</a><br>";
-	echo "<a href=\"uploader.php\">[3] Click here to check an epub index.</a><br>";
+	echo "<a href=\"checker.php\">[3] Click here to check an epub index.</a><br>";
 
 ?>
 
