@@ -13,35 +13,36 @@ function getTime(){
 //Hightlight strings in iframe. To use this method, you need to name iframe "ePubViewerFrame" (in js/epub.min.js)
 function HighlightString() {
 	try{
+		var chapter, page;
+		chapter=Book.getChapter();
+		page=Book.getPage();
 		var iframe = document.getElementsByName("ePubViewerFrame");
         var id = iframe[0].id;
         iframe = document.getElementById(id);
         var idoc = iframe.contentDocument || iframe.contentWindow.document;
         var SelectedText = idoc.getSelection().toString();
-        /*
-        var nNd = document.createElement("highlighted");
 
-        var w = idoc.getSelection().getRangeAt(0);
-        w.surroundContents(nNd);
-
-
-        //var SelectedText = nNd.innerHTML; //get selected strings -> SelectedText
-
-        $('iframe').contents().find('highlighted').css('background-color', 'yellow');
-		getTime();
-
-*/
-        var userSelection = idoc.getSelection().getRangeAt(0);
-        var safeRanges = getSafeRanges(userSelection);
-        for (var i = 0; i < safeRanges.length; i++) {
-            highlightRange(safeRanges[i]);
+        try{ //make array
+        	HighlightedStrings[chapter+"-"+page][0];
+        }catch(e){
+        	HighlightedStrings[chapter+"-"+page] = new Array();
         }
 
 
+        var userSelection = idoc.getSelection().getRangeAt(0);
+        //from dangerous range to safe range(dangerous: include HTML tags, safe: smaller range that doesn't include HTML tags)
+        var safeRanges = getSafeRanges(userSelection);
 
-        alert("You highlighted : "+ SelectedText);
+        for(var i = 0; i < safeRanges.length; i++){
+        	if(safeRanges[i].toString()){
+        		//alert(safeRanges[i].toString());
+        		HighlightedStrings[chapter+"-"+page].push(safeRanges[i].toString());
+        	}
+        	highlightRange(safeRanges[i]);
+        }
 
-        alert("chapterNumber = "+Book.getChapter()+",Page Number ="+Book.getPage());
+        //alert("You highlighted : "+ SelectedText);
+        //alert("chapterNumber = "+Book.getChapter()+",Page Number ="+Book.getPage());
 
 	}catch(e){
 		alert("error");
@@ -67,60 +68,42 @@ function BookmarkPage(){
 		document.getElementById("bookmarker").style.visibility="hidden";
 }
 
-// switch bookmark's visible/hidden (when page is turned)
-function pageChange(str){
+// this function is called when page is changed
+function pageChangedFunc(){
 	var chapter, page;
 	chapter=Book.getChapter();
 	page=Book.getPage();
-	var a = BookmarkedPages[chapter+"-"+page];
-	if(a == undefined)
+
+	//bookmark
+	if(BookmarkedPages[chapter+"-"+page] == undefined)
 		BookmarkedPages[chapter+"-"+page]=false;
 
-	var lastPage=1;
-	if(page==1 && str == "prev"){ // look for previous page's number of last page
-		while(1){
-			var c = chapter-1;
-			var d = lastPage+1;
-			var b = BookmarkedPages[c+"-"+d];
-			if(b != undefined)
-				lastPage++;
-			else
-				break;
-		}
-	}
-	var flag=false;
-	var pi=page+1;
-	var pd=page-1;
-	var ci=chapter+1;
-	var cd=chapter-1;
-	if(str == "prev"){ //prev
-		if(page==1){ //no previous page
-			if(BookmarkedPages[cd+"-"+lastPage] == true) //bookmarked
-				document.getElementById("bookmarker").style.visibility="visible";
-			else if(chapter!=0) //not bookmarked and not first page
-				document.getElementById("bookmarker").style.visibility="hidden";
-		}else{ // previous page exists
-			if(BookmarkedPages[chapter+"-"+pd] == true)
-				document.getElementById("bookmarker").style.visibility="visible";
-			else
-				document.getElementById("bookmarker").style.visibility="hidden";
-		}
-	}else if(str == "next"){
-		if(BookmarkedPages[chapter+"-"+pi]==undefined){ // next page may not exist
-			if(BookmarkedPages[ci+"-1"] == true)
-				document.getElementById("bookmarker").style.visibility="visible";
-			else
-				document.getElementById("bookmarker").style.visibility="hidden";
-		}else{ // next page exists
-			if(BookmarkedPages[chapter+"-"+pi] == true)
-				document.getElementById("bookmarker").style.visibility="visible";
-			else
-				document.getElementById("bookmarker").style.visibility="hidden";
-		}
+	if(BookmarkedPages[chapter+"-"+page] == true) //bookmarked
+		document.getElementById("bookmarker").style.visibility="visible";
+	else
+		document.getElementById("bookmarker").style.visibility="hidden";
+
+
+	// highlight
+	var iframe = document.getElementsByName("ePubViewerFrame");
+    var id = iframe[0].id;
+    iframe = document.getElementById(id);
+    var idoc = iframe.contentDocument || iframe.contentWindow.document;
+
+
+	for(i=0; i<10; i++){
+		try{var str = HighlightedStrings[chapter+"-"+page][i];}
+		catch(e){break;}
+		$('iframe').contents().find("span:contains('"+str+"')").css( "background-color", "yellow" );
+
+    	//highlightRange(range);
+
 	}
 }
 
-//to highlight (1)
+
+
+//to make safe range( that smaller ranges and they dosen't include any HTML tags in it)
 function getSafeRanges(dangerous) {
     var a = dangerous.commonAncestorContainer;
     // Starts -- Work inward from the start, selecting the largest safe range
@@ -185,14 +168,7 @@ function getSafeRanges(dangerous) {
     return response;
 }
 
-// to highlight (2)
-function highlightSelection() {
-    var userSelection = window.getSelection().getRangeAt(0);
-    highlightRange(userSelection);
-
-}
-
-// to highlight (3)
+//to highlight
 function highlightRange(range) {
     var newNode = document.createElement("div");
     newNode.setAttribute(
@@ -200,4 +176,15 @@ function highlightRange(range) {
        "background-color: yellow; display: inline;"
     );
     range.surroundContents(newNode);
+}
+
+function object2json(object){
+	try{
+		var jsonstring=JSON.stringify(object);
+		alert(jsonstring);
+		return jsonstring;
+	}catch(e){
+		// エラーを出力
+		alert(e);
+	}
 }

@@ -65,10 +65,12 @@
         </style>
         <script>
         	"use strict";
-
+			var oldChapter=0,oldPage=1;
         	// BookmarkedPages["chapter-pages"]=true(bookmarked) or false(not bookmarked)
         	// ex. BookmarkedPages[1-2]=true means "chapter 1 page 2 is bookmarked"
 			var BookmarkedPages = new Object();
+			// HighlightedStrings
+        	var HighlightedStrings = new Object();
 
         	var query = window.location.search.substring(1);
         	var element = query.split( '=' );
@@ -99,6 +101,8 @@
                 });
             });
 
+
+
         </script>
 	</head>
 
@@ -122,16 +126,18 @@
             <div id="bookmarker" style="visibility:hidden"><img src="img/bookmarker.png"/></div>
           </div>
         </div>
-    		<div id="prev" onclick="pageChange('prev'); Book.prevPage();" class="arrow"><</div>
+    		<div id="prev" onclick="Book.prevPage();" class="arrow"><</div>
     		<div id="wrapper">
     			<div id = "area"></div>
     		</div>
-    		<div id="next" onclick="pageChange('next'); Book.nextPage();" class="arrow">></div>
+    		<div id="next" onclick=" Book.nextPage();" class="arrow">></div>
     	</div>
     	<script>
     		Book.renderTo("area").then(function(){
 
     		});
+
     	</script>
+
     </body>
 </html>
