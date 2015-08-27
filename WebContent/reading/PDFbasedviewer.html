@@ -71,6 +71,8 @@
 			var BookmarkedPages = new Object();
 			// HighlightedStrings
         	var HighlightedStrings = new Object();
+			//memo
+			var memorandum = new Object();
 
         	var query = window.location.search.substring(1);
         	var element = query.split( '=' );
@@ -96,9 +98,13 @@
                 $('#bookmark').click(function(){
 					BookmarkPage();
                 });
-                $('#zoomOut').click(function(){
-					zoomOut();
+                $('#memo').click(function(){
+					memoFunc();
                 });
+                $('#saveBtn').click(function(){
+					saveMemo();
+                });
+
             });
 
 
@@ -122,8 +128,11 @@
             <a id="bookmark" class="icon-bookmark-empty" title="Bookmark"></a>
             <a id="highlighting" href="javascript:HighlightString();" title="Highlight"><font color="black" size="2"><span style="background-color:yellow">abc</span></font></a>
             <a id="changeview" class="icon-link" title="Change View"></a>
+            <a id="memo" title="memo" class="icon-edit"></a>
             <font color="red"><a id="close" class="icon-cancel-circled" title="Close"></a></font>
             <div id="bookmarker" style="visibility:hidden"><img src="img/bookmarker.png"/></div>
+			<div><textarea id="memoarea" cols="10" rows="5" style="visibility:hidden"></textarea></div>
+			<input type="button" id="saveBtn" value="save" style="visibility:hidden" />
           </div>
         </div>
     		<div id="prev" onclick="Book.prevPage();" class="arrow"><</div>

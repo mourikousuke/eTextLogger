@@ -91,14 +91,23 @@ function pageChangedFunc(){
     var idoc = iframe.contentDocument || iframe.contentWindow.document;
 
 
-	for(i=0; i<10; i++){
-		try{var str = HighlightedStrings[chapter+"-"+page][i];}
+	for(i=0; 1; i++){
+		try{
+			var str = HighlightedStrings[chapter+"-"+page][i];
+			if (str == undefined) break;
+		}
 		catch(e){break;}
 		$('iframe').contents().find("span:contains('"+str+"')").css( "background-color", "yellow" );
-
-    	//highlightRange(range);
-
 	}
+
+	//memo
+	if(memorandum[chapter+"-"+page] != undefined)
+		document.getElementById("memoarea").value=memorandum[chapter+"-"+page];
+	else
+		document.getElementById("memoarea").value="";
+
+
+	//alert("you opened "+chapter+"-"+page);
 }
 
 
@@ -188,3 +197,27 @@ function object2json(object){
 		alert(e);
 	}
 }
+
+function memoFunc(){
+	if(document.getElementById("memoarea").style.visibility=="visible"){
+		document.getElementById("memoarea").style.visibility="hidden";
+		document.getElementById("saveBtn").style.visibility="hidden";
+		if(memorandum[chapter+"-"+page] != undefined)
+			document.getElementById("memoarea").value=memorandum[chapter+"-"+page];
+		else
+			document.getElementById("memoarea").value="";
+	}else{
+		document.getElementById("memoarea").style.visibility="visible"
+		document.getElementById("saveBtn").style.visibility="visible";
+	}
+};
+
+function saveMemo(){
+	var chapter, page;
+	chapter=Book.getChapter();
+	page=Book.getPage();
+
+	memorandum[chapter+"-"+page]=document.getElementById("memoarea").value;
+	document.getElementById("memoarea").style.visibility="hidden";
+	document.getElementById("saveBtn").style.visibility="hidden";
+};
