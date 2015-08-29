@@ -221,3 +221,12 @@ function saveMemo(){
 	document.getElementById("memoarea").style.visibility="hidden";
 	document.getElementById("saveBtn").style.visibility="hidden";
 };
+
+
+function testFunc(){
+	//$('iframe').contents().find("span:contains('"+str+"')").css( "background-color", "yellow" );
+	$('iframe').contents().each(function(){
+        var txt = $(this).text();
+         $(this).html(txt.replace(/ood/g,'<span style="color:red">hoge</span>'));
+    });
+}

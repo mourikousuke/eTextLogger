@@ -93,7 +93,7 @@
                 	var element = query.split( '=' );
                     //var paramName = decodeURIComponent( element[ 0 ] );
                     var paramValue = decodeURIComponent( element[ 1 ] );
-                	document.location = "viewer.html?book-selection="+paramValue;
+                	document.location = "viewer_ReflowMode.html?book-selection="+paramValue;
                 });
                 $('#bookmark').click(function(){
 					BookmarkPage();
@@ -127,8 +127,9 @@
           	<!-- actions are written at EPUBJS.reader.ControlsController (in reader.min.js ) -->
             <a id="bookmark" class="icon-bookmark-empty" title="Bookmark"></a>
             <a id="highlighting" href="javascript:HighlightString();" title="Highlight"><font color="black" size="2"><span style="background-color:yellow">abc</span></font></a>
-            <a id="changeview" class="icon-link" title="Change View"></a>
+            <a id="changeview" class="icon-link" title="Reflow Mode"></a>
             <a id="memo" title="memo" class="icon-edit"></a>
+            <a id="test" title="testing" href="javascript:testFunc();">?</a>
             <font color="red"><a id="close" class="icon-cancel-circled" title="Close"></a></font>
             <div id="bookmarker" style="visibility:hidden"><img src="img/bookmarker.png"/></div>
 			<div><textarea id="memoarea" cols="10" rows="5" style="visibility:hidden"></textarea></div>

@@ -143,7 +143,7 @@
 						}else{
 							if($keyword != ""){
 								if(count($resultlist)){
-									echo "<form style=\"text-align:center\" method=\"get\" action=\"reading/PDFbasedviewer.html\">";
+									echo "<form style=\"text-align:center\" method=\"get\" action=\"reading/viewer_FixMode.html\">";
 									echo "<select name=\"book-selection\">";
 									echo "<option>Select a Book</option>";
 									foreach($resultlist as $title){ echo "<option value=\"$title\">".$title."</option>";}

@@ -45,7 +45,7 @@
                 	var element = query.split( '=' );
                     //var paramName = decodeURIComponent( element[ 0 ] );
                     var paramValue = decodeURIComponent( element[ 1 ] );
-                	document.location = "PDFbasedviewer.html?book-selection="+paramValue;
+                	document.location = "viewer_FixMode.html?book-selection="+paramValue;
                 });
             });
 
@@ -121,7 +121,7 @@
             <a id="highlighting" href="javascript:HighlightString();"><font color="black" size="2"><span style="background-color:yellow">abc</span></font></a>
             <!-- <a id="setting" class="icon-cog"></a>
             <a id="fullscreen" class="icon-resize-full"></a> -->
-            <a id="changeview" class="icon-link"></a>
+            <a id="changeview" class="icon-link" title="Fix Mode"></a>
             <font color="red"><a id="close" class="icon-cancel-circled"></a></font>
           </div>
         </div>
