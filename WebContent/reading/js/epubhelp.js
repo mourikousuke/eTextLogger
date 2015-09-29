@@ -226,11 +226,5 @@ function saveMemo(){
 }
 
 function testFunc(){
-	var chapter, page;
-	chapter=Book.getChapter();
-	page=Book.getPage();
-	var iframe = document.getElementsByName("ePubViewerFrame");
-    var id = iframe[0].id;
-    iframe = document.getElementById(id);
-    var idoc = iframe.contentDocument || iframe.contentWindow.document;
+
 }
