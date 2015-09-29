@@ -41,6 +41,9 @@ function HighlightString() {
         	highlightRange(safeRanges[i]);
         }
 
+        //highlight same strings in the page
+        $('iframe').contents().find("span:contains('"+SelectedText+"')").highlight(SelectedText);
+
         //alert("You highlighted : "+ SelectedText);
         //alert("chapterNumber = "+Book.getChapter()+",Page Number ="+Book.getPage());
 
@@ -90,15 +93,15 @@ function pageChangedFunc(){
     iframe = document.getElementById(id);
     var idoc = iframe.contentDocument || iframe.contentWindow.document;
 
-
 	for(i=0; 1; i++){
 		try{
 			var str = HighlightedStrings[chapter+"-"+page][i];
 			if (str == undefined) break;
 		}
 		catch(e){break;}
-		$('iframe').contents().find("span:contains('"+str+"')").css( "background-color", "yellow" );
+		$('iframe').contents().find("span:contains('"+str+"')").highlight(str);
 	}
+
 
 	//memo
 	if(memorandum[chapter+"-"+page] != undefined)
@@ -220,13 +223,14 @@ function saveMemo(){
 	memorandum[chapter+"-"+page]=document.getElementById("memoarea").value;
 	document.getElementById("memoarea").style.visibility="hidden";
 	document.getElementById("saveBtn").style.visibility="hidden";
-};
-
+}
 
 function testFunc(){
-	//$('iframe').contents().find("span:contains('"+str+"')").css( "background-color", "yellow" );
-	$('iframe').contents().each(function(){
-        var txt = $(this).text();
-         $(this).html(txt.replace(/ood/g,'<span style="color:red">hoge</span>'));
-    });
+	var chapter, page;
+	chapter=Book.getChapter();
+	page=Book.getPage();
+	var iframe = document.getElementsByName("ePubViewerFrame");
+    var id = iframe[0].id;
+    iframe = document.getElementById(id);
+    var idoc = iframe.contentDocument || iframe.contentWindow.document;
 }
