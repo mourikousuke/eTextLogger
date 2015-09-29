@@ -42,7 +42,7 @@ function HighlightString() {
         }
 
         //highlight same strings in the page
-        $('iframe').contents().find("span:contains('"+SelectedText+"')").highlight(SelectedText);
+        $('iframe').contents().find("body").highlight(SelectedText);
 
         //alert("You highlighted : "+ SelectedText);
         //alert("chapterNumber = "+Book.getChapter()+",Page Number ="+Book.getPage());
@@ -99,7 +99,7 @@ function pageChangedFunc(){
 			if (str == undefined) break;
 		}
 		catch(e){break;}
-		$('iframe').contents().find("span:contains('"+str+"')").highlight(str);
+		$('iframe').contents().find("body").highlight(str);
 	}
 
 
@@ -182,11 +182,8 @@ function getSafeRanges(dangerous) {
 
 //to highlight
 function highlightRange(range) {
-    var newNode = document.createElement("div");
-    newNode.setAttribute(
-       "style",
-       "background-color: yellow; display: inline;"
-    );
+    var newNode = document.createElement("span");
+    newNode.setAttribute("class","highlight;");
     range.surroundContents(newNode);
 }
 

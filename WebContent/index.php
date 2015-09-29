@@ -138,8 +138,9 @@
 
 					<?php
 						$user_agent = $_SERVER['HTTP_USER_AGENT'];
-						if (strstr($user_agent, 'Trident') || strstr($user_agent, 'MSIE')) {
-							echo "<p align=\"center\">We are sorry that this system dose not support Internet Explorer.<br>File uploading function and file checking function are available.</p>";
+
+						if (!(strstr($user_agent, 'Chrome') || strstr($user_agent, 'Firefox') || strstr($user_agent, 'Opera'))) {
+							echo "<p align=\"center\">We are sorry that this system dose not support the browser you are currently using.<br>Please use either Google Chrome, Firefox, or Opera.<br>These web browsers are available also on smart phones via application.</p> ";
 						}else{
 							if($keyword != ""){
 								if(count($resultlist)){
