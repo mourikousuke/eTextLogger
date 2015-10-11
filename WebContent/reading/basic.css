@@ -1,33 +1,33 @@
-body {
+body { /* */
   overflow: hidden;
 }
 
-#main {
+#main { /* */
   position: absolute;
   width: 100%;
   height: 100%;
 }
 
-#area {
+#area { /* */
   width: 80%;
   height: 80%;
   margin: 5% auto;
   max-width: 1250px;
 }
 
-#area iframe {
+#area iframe { /* */
   border: none;
 }
 
-#prev {
+#prev { /* */
   left: 40px;
 }
 
-#next {  
+#next { /* */
   right: 40px;
 }
 
-.arrow {
+.arrow { /* */
   position: absolute;
   top: 50%;
   margin-top: -32px;
@@ -41,15 +41,15 @@ body {
   user-select: none;
 }
 
-.arrow:hover {
+.arrow:hover { /* */
   color: #777;
 }
- 
-.arrow:active {
+
+.arrow:active { /* */
   color: #000;
 }
 
-#loader {
+#loader { /* */
   position: absolute;
   z-index: 10;
   left: 50%;
@@ -57,7 +57,7 @@ body {
   margin: -33px 0 0 -33px;
 }
 
-#toc {
+#toc { /* */
   position: absolute;
   top: 0;
   left: 0;

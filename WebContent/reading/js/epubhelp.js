@@ -75,7 +75,12 @@ function BookmarkPage(){
 function pageChangedFunc(){
 	var chapter, page;
 	chapter=Book.getChapter();
-	page=Book.getPage();
+	page=Book.getPage()
+	var iframe = document.getElementsByName("ePubViewerFrame");
+    var id = iframe[0].id;
+    iframe = document.getElementById(id);
+    var idoc = iframe.contentDocument || iframe.contentWindow.document;
+
 
 	//bookmark
 	if(BookmarkedPages[chapter+"-"+page] == undefined)
@@ -88,11 +93,6 @@ function pageChangedFunc(){
 
 
 	// highlight
-	var iframe = document.getElementsByName("ePubViewerFrame");
-    var id = iframe[0].id;
-    iframe = document.getElementById(id);
-    var idoc = iframe.contentDocument || iframe.contentWindow.document;
-
 	for(i=0; 1; i++){
 		try{
 			var str = HighlightedStrings[chapter+"-"+page][i];
@@ -105,9 +105,9 @@ function pageChangedFunc(){
 
 	//memo
 	if(memorandum[chapter+"-"+page] != undefined)
-		document.getElementById("memoarea").value=memorandum[chapter+"-"+page];
+		document.getElementById("memorandum").value=memorandum[chapter+"-"+page];
 	else
-		document.getElementById("memoarea").value="";
+		document.getElementById("memorandum").value="";
 
 
 	//alert("you opened "+chapter+"-"+page);
@@ -199,16 +199,21 @@ function object2json(object){
 }
 
 function memoFunc(){
-	if(document.getElementById("memoarea").style.visibility=="visible"){
-		document.getElementById("memoarea").style.visibility="hidden";
+	var chapter, page;
+	chapter=Book.getChapter();
+	page=Book.getPage();
+	if(document.getElementById("memorandum").style.visibility=="visible"){
+		document.getElementById("memo").title="show/take a memo";
+		document.getElementById("memorandum").style.visibility="hidden";
 		document.getElementById("saveBtn").style.visibility="hidden";
 		if(memorandum[chapter+"-"+page] != undefined)
-			document.getElementById("memoarea").value=memorandum[chapter+"-"+page];
+			document.getElementById("memorandum").value=memorandum[chapter+"-"+page];
 		else
-			document.getElementById("memoarea").value="";
+			document.getElementById("memorandum").value="";
 	}else{
-		document.getElementById("memoarea").style.visibility="visible"
-		document.getElementById("saveBtn").style.visibility="visible";
+		document.getElementById("memo").title="hide memo";
+		document.getElementById("memorandum").style.visibility="visible"
+		//document.getElementById("saveBtn").style.visibility="visible";
 	}
 };
 
@@ -217,11 +222,29 @@ function saveMemo(){
 	chapter=Book.getChapter();
 	page=Book.getPage();
 
-	memorandum[chapter+"-"+page]=document.getElementById("memoarea").value;
-	document.getElementById("memoarea").style.visibility="hidden";
+	memorandum[chapter+"-"+page]=document.getElementById("memorandum").value;
+	//document.getElementById("memoarea").style.visibility="hidden";
 	document.getElementById("saveBtn").style.visibility="hidden";
+
+
+}
+
+function memoChanged(elm){
+	var v, old = elm.value;
+	return function(){
+		if(old != (v=elm.value)){
+			old = v;
+			document.getElementById("saveBtn").style.visibility="visible";
+		}
+	}
 }
 
 function testFunc(){
+
+	var iframe = document.getElementsByName("ePubViewerFrame");
+    var id = iframe[0].id;
+    var ifr = document.getElementById("body");
+    /*var cw = ifr.contentWindow;
+    cw.scrollTo(10,10);*/
 
 }

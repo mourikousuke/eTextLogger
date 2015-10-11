@@ -10,28 +10,37 @@
 
         <style type="text/css">
 
-          body {
+          body { /* フレーム外*/
             overflow: auto;
-            background: #eee;
+            /*background: #eee;*/
+            background-image: url("src/images/wood.jpg");
           }
 
-          #wrapper {
+		  #main {
+			/* フレーム周囲 */
+		  }
+
+          #wrapper { /* */
             width: 480px;
             height: 640px;
             overflow: hidden;
             border: 1px solid #ccc;
             margin: 28px auto;
             background: #fff;
-            border-radius: 0 5px 5px 0;
+            border-radius: 20px 5px 5px 20px; /*円形に削る(順に左上、右上、右下、左下)*/
           }
 
-          #area {
+          #area { /* フレーム内 */
+            /*background: #ccc;*/
+            background-image: url("src/images/book.jpg");
             width: 480px;
             height: 660px;
             margin: -30px auto;
+            /*
             -moz-box-shadow:      inset 10px 0 20px rgba(0,0,0,.1);
             -webkit-box-shadow:   inset 10px 0 20px rgba(0,0,0,.1);
             box-shadow:           inset 10px 0 20px rgba(0,0,0,.1);
+            */
           }
 
           #area iframe {
