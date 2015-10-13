@@ -35,6 +35,8 @@
 <!-- CSS -->
 <!-- <link rel="stylesheet" href="basic.css"> -->
 <link rel="stylesheet" href="css/main.css">
+        <link rel="stylesheet" href="css/normalize.css">
+        <link rel="stylesheet" href="css/popup.css">
 
 <style type="text/css">
 body { /* 描画順序最奥 */
@@ -43,7 +45,7 @@ body { /* 描画順序最奥 */
 }
 
 #wrapper { /* ビューアフレーム部分(ビューアが入っているフレーム)の設定 */
-	width: 800px; /* 幅(bodyが基本的に幅768pxなので、スクロールバーで隠れる部分も考慮すると800px推奨) */
+	width: 800px; /* 幅 */
 	height: 85%; /* 高さ */
 	max-height: 600px; /* 一般的なスライドの高さ意識で高さ上限600px。オーバーフローはスクロール可に */
 
@@ -76,6 +78,10 @@ body { /* 描画順序最奥 */
 	/* opacity: .5; */
 }
 
+#jumparea { /* ジャンプ系エリア(目次ジャンプ、検索ジャンプ) */
+	margin: 20px 20px; /* 順に上から、左からのマージン */
+}
+
 </style>
 <script>
 	"use strict";
@@ -92,6 +98,11 @@ body { /* 描画順序最奥 */
 	var element = query.split('=');
 	//var paramName = decodeURIComponent( element[ 0 ] );
 	var paramValue = decodeURIComponent(element[1]);
+	//ウィンドウサイズ
+	var windowWidth = window.innerWidth;
+	var windowHeight = window.innerHeight;
+
+	//描画時の幅と高さを指定
 	var Book = ePub("../books/unzipped/" + paramValue + "/", {
 		width : 768,
 		height : 1024,
@@ -99,11 +110,10 @@ body { /* 描画順序最奥 */
 	});
 
 	$(function() {
-		$('#close').click(function() {
+		$('#close').click(function() { //CLOSEボタンの処理
 			document.location = "../index.php";
 		});
-		$('#changeview')
-				.click(
+		$('#changeview').click( //changeviewボタンの処理
 						function() {
 							var query = window.location.search.substring(1);
 							var element = query.split('=');
@@ -112,19 +122,63 @@ body { /* 描画順序最奥 */
 							document.location = "viewer_ReflowMode.html?book-selection="
 									+ paramValue;
 						});
-		$('#bookmark').click(function() {
+		$('#bookmark').click(function() { //bookmarkボタンの処理(詳細はepubhelp.js内のBookmarkPage関数で定義)
 			BookmarkPage();
 		});
-		$('#memo').click(function() {
+		$('#memo').click(function() { //memoボタンの処理(詳細はepubhelp.js内のmemoFunc関数で定義)
 			memoFunc();
 		});
-		$('#saveBtn').click(function() {
+		$('#saveBtn').click(function() { //memo保存用ボタンの処理(詳細はepubhelp.js内のsaveMemo関数で定義)
 			saveMemo();
 		});
-		$("#memorandum").each(function(){
+		$('#searchBtn').click(function() { //検索ボタンの処理(詳細はepubhelp.js内のsaveMemo関数で定義)
+			searchFunc();
+		});
+		$("#memorandum").each(function(){ //メモの内容が変わった際に呼び出される処理
 			$(this).bind('keyup', memoChanged(this));
 		});
+		$('html').keyup(function(e){
+			switch(e.which){
+				case 37: // 「←」を押したとき
+					Book.prevPage();
+					break;
 
+				case 38: // 「↑」を押したとき
+					break;
+
+				case 39: // 「→」を押したとき
+					Book.nextPage();
+					break;
+
+				case 40: //「↓」を押したとき
+					break;
+
+			}
+		});
+	});
+
+	Book.getMetadata().then(function(meta){
+		document.title = meta.bookTitle+" – "+meta.creator;
+	});
+	Book.getToc().then(function(toc){
+		var $select = document.getElementById("toc"),
+		docfrag = document.createDocumentFragment();
+		toc.forEach(function(chapter) {
+		var option = document.createElement("option");
+		option.textContent = chapter.label;
+		option.ref = chapter.href;
+		docfrag.appendChild(option);
+	});
+	$select.appendChild(docfrag);
+	$select.onchange = function(){
+		var index = $select.selectedIndex,
+		url = $select.options[index].ref;
+		Book.goto(url);
+		return false;
+	}
+	});
+	Book.ready.all.then(function(){
+	document.getElementById("loader").style.display = "none";
 	});
 
 
@@ -134,6 +188,7 @@ body { /* 描画順序最奥 */
 
 
 <body>
+
 <!--
 	<div id="sidebar">
 		<div id="panels">
@@ -161,10 +216,21 @@ body { /* 描画順序最奥 */
 	</div>
 -->
 	<div id="main">
+		<div id="jumparea">
+			<select id="toc"></select><br>
+			<input type="text" id="searchTextBox" />
+			<input type="button" id="searchBtn" value="Search"/><br>
+			<div id="searchView">
+				<ul id="searchResults"></ul>
+			</div>
+		</div>
 		<div id="titlebar">
+			<!-- サイドバーオープナ
 			<div id="opener">
 				<a id="slider" class="icon-menu"></a>
 			</div>
+			-->
+
 			<!--
 			<div id="metainfo">
 				<span id="book-title"></span> <span id="title-seperator">&nbsp;&nbsp;?&nbsp;&nbsp;</span>
@@ -200,7 +266,7 @@ body { /* 描画順序最奥 */
 			<div id="area"></div>
 		</div>
 		<div id="next" onclick=" Book.nextPage();" class="arrow">></div>
-
+		<div id="loader"><img src="../reader/img/loader.gif"></div>
 	</div>
 
 	<script>

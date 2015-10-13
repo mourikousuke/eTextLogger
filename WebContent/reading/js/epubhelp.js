@@ -239,6 +239,11 @@ function memoChanged(elm){
 	}
 }
 
+function searchFunc(){ //検索機能
+	var target = document.getElementById("searchTextBox").value;
+}
+
+
 function testFunc(){
 
 	var iframe = document.getElementsByName("ePubViewerFrame");

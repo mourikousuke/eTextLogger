@@ -210,7 +210,7 @@ body { /* 描画順序最奥部分 */
 #title-controls { /* ファンクションボタンが置かれるスペース */
   float: right;
   height: 30px;
-  margin: -2% 2%;
+  margin: -5% 2%; /* 順に上から、右からのマージン */
 }
 
 #panels a { /* */
