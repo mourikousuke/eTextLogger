@@ -10,8 +10,8 @@
 }
 
 body { /* 描画順序最奥部分 */
-  background: #4e4e4e; /* 色 */
   overflow: hidden;
+  background: #00f; /* レイアウト最奥のカラー */
 }
 
 #main { /* 全体 */
@@ -29,8 +29,8 @@ body { /* 描画順序最奥部分 */
   -ms-user-select: none; /* 画面内選択(ビューアフレーム外)を禁止 */
 
   /* border-radius: 5px 0px 0px 5px; */
-  border-radius: 5px; /* 画面の描画領域を円形に削る。値が大きいほど円形に削れる範囲がより広くなる */
-  /* background: #f0f0f0; /* ビューアフレーム外の背景色 */
+  border-radius: 10px; /* ビューアフレーム外の4隅の描画領域を円形に削る。値が大きいほど円形に削れる範囲がより広くなる */
+  background: #eee; /* ビューアフレーム外の背景色 */
 
   overflow: hidden; /*  */
   -webkit-transition: -webkit-transform .4s, width .2s;
@@ -159,9 +159,9 @@ body { /* 描画順序最奥部分 */
 }
 
 #sidebar.open { /* サイドバー(リフロー型の左側)のopen時の設定 */
- /* left: 0; */
- /* -webkit-transform: translate(0, 0);
- -moz-transform: translate(0, 0); */
+ left: 0;
+ -webkit-transform: translate(0, 0);
+ -moz-transform: translate(0, 0);
 }
 
 #main.closed { /* サイドバー(リフロー型の左側)のclose時の設定 */
@@ -210,7 +210,7 @@ body { /* 描画順序最奥部分 */
 #title-controls { /* ファンクションボタンが置かれるスペース */
   float: right;
   height: 30px;
-  margin: -5% 2%; /* 順に上から、右からのマージン */
+  margin: -2% 2%; /* 順に上から、右からのマージン */
 }
 
 #panels a { /* */

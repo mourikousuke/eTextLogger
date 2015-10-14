@@ -32,16 +32,20 @@
 <!-- Full Screen -->
 <script src="js/libs/screenfull.min.js"></script>
 
+<!-- sidebar -->
+<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script>
+<script src="simpler-sidebar/dist/jquery.simple-sidebar.min.js"></script>
+
 <!-- CSS -->
 <!-- <link rel="stylesheet" href="basic.css"> -->
 <link rel="stylesheet" href="css/main.css">
-        <link rel="stylesheet" href="css/normalize.css">
-        <link rel="stylesheet" href="css/popup.css">
+<link rel="stylesheet" href="css/normalize.css">
+<link rel="stylesheet" href="css/popup.css">
+<link rel="stylesheet" type="text/css" href="css/sidebar-style.css">
 
 <style type="text/css">
-body { /* 描画順序最奥 */
+body { /* ビューアフレーム外 */
 	overflow: no;
-	background: #eee;
 }
 
 #wrapper { /* ビューアフレーム部分(ビューアが入っているフレーム)の設定 */
@@ -52,7 +56,7 @@ body { /* 描画順序最奥 */
 	border: 1px solid #000; /* 枠線の色 */
 	margin: 20px auto; /* 順に上からのマージン、左からのマージン。title-controll、即ちファンクションボタンエリアサイズに合わせて可変 */
 	background: #fff; /* 背景色 */
-	border-radius: 0 5px 5px 0; /* 枠線の隅を半径xの円状に丸める */
+
 
 	overflow-x: hidden; /*横方向は枠内に入りきれない部分は隠す */
 	overflow-y: scroll; /*縦方向は枠内に入りきれない部分はスクロールして見れる */
@@ -155,6 +159,7 @@ body { /* 描画順序最奥 */
 
 			}
 		});
+
 	});
 
 	Book.getMetadata().then(function(meta){
@@ -180,7 +185,11 @@ body { /* 描画順序最奥 */
 	Book.ready.all.then(function(){
 	document.getElementById("loader").style.display = "none";
 	});
-
+	//サーバないファイルを取得する(非同期の方法もあるが簡単にこの方法を使っている)
+	function getTextData(fname){
+		var text = file_get_contents(fname);
+		return text;
+	}
 
 </script>
 </head>
@@ -188,49 +197,32 @@ body { /* 描画順序最奥 */
 
 
 <body>
+	<div id="main" class="main-content">
+        <!-- div #main-navbar .main-navbar .main-navbar-fixed-top -->
+		<div id="main-sidebar" class="main-sidebar main-sidebar-left">
+			<div class="section">
+				<!-- sidebar's section -->
+				<div id="jumparea">
+					PAGE JUMP : <select id="toc"></select><br>
+					<input type="search" id="searchTextBox" />
+					<input type="button" id="searchBtn" value="Search"/><br>
+				</div>
+			</div>
+			<nav>
+				<ul id="itemList">
 
-<!--
-	<div id="sidebar">
-		<div id="panels">
-			<input id="searchBox" placeholder="search" type="search">
-			<a id="show-Search" class="show_view icon-search" data-view="Search">Search</a>
-			<a id="show-Toc" class="show_view icon-list-1 active" data-view="Toc">TOC</a>
-			<a id="show-Bookmarks" class="show_view icon-bookmark" data-view="Bookmarks">Bookmarks</a>
-			<a id="show-Notes" class="show_view icon-edit" data-view="Notes">Notes</a>
+				</ul>
+			</nav>
 		</div>
-		<div id="tocView" class="view">
-		</div>
-		<div id="searchView" class="view">
-			<ul id="searchResults"></ul>
-		</div>
-		<div id="bookmarksView" class="view">
-			<ul id="bookmarks"></ul>
-		</div>
-		<div id="notesView" class="view">
-			<div id="new-note">
-				<textarea id="note-text"></textarea>
-				<button id="note-anchor">Anchor</button>
-			</div>
-			<ol id="notes"></ol>
-		</div>
-	</div>
--->
-	<div id="main">
-		<div id="jumparea">
-			<select id="toc"></select><br>
-			<input type="text" id="searchTextBox" />
-			<input type="button" id="searchBtn" value="Search"/><br>
-			<div id="searchView">
-				<ul id="searchResults"></ul>
-			</div>
-		</div>
+
+
 		<div id="titlebar">
-			<!-- サイドバーオープナ
-			<div id="opener">
-				<a id="slider" class="icon-menu"></a>
-			</div>
-			-->
 
+<div class="main-navbar-content">
+				<div id="toggle-sidebar" class="icon left">
+					<a id="sidebar-opener" class="icon-menu" title="Sidebar"></a>
+				</div>
+			</div>
 			<!--
 			<div id="metainfo">
 				<span id="book-title"></span> <span id="title-seperator">&nbsp;&nbsp;?&nbsp;&nbsp;</span>
@@ -267,9 +259,31 @@ body { /* 描画順序最奥 */
 		</div>
 		<div id="next" onclick=" Book.nextPage();" class="arrow">></div>
 		<div id="loader"><img src="../reader/img/loader.gif"></div>
+		<div class="overlay"></div>
 	</div>
 
+
+
+
 	<script>
+
+	$(document).ready(function() {
+        $('#main-sidebar').simpleSidebar({
+            opener: '#toggle-sidebar',
+            wrapper: '#main',
+            animation: {
+                easing: "easeOutQuint"
+            },
+            sidebar: {
+                align: 'left',
+                closingLinks: '.close-sb',
+            },
+            sbWrapper: {
+                display: true
+            }
+        });
+    });
+
 		Book.renderTo("area").then(function() {
 
 		});

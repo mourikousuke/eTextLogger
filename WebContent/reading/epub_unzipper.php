@@ -68,7 +68,7 @@
 				unzip($zipUploadPath, $unzipUploadPath);
 
         	} else {
-            	echo "The file could not be uploaded correctly.<br>";
+            	echo "The file <font color=\"red\">could not</font> be uploaded correctly.<br>Check permissions.<br>";
         	}
    		} else {
         	echo "No file is selected.<br>";
