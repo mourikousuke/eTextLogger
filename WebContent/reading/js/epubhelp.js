@@ -281,16 +281,17 @@ function searchFunc(){ // 検索機能
 		//リストに表示
 		var display = document.getElementById('itemList');
 
-		$('#itemList').append("Found "+ items +" items.");
+		$('#itemList').append("---Found "+ items +" items.------------");
 		for(i = 0; i < resultList.length; i++){
 			for(j = 0; j < resultList[i].length; j++){
 				var k = i+1;
-				$('#itemList').append("<li>PAGE : "+ k +" '"+resultList[i][j]+" '</li>");
+				var linkFile = tocfilelist[i];
+				$('#itemList').append("<li><a href=\"javascript:Book.gotoHref('"+linkFile+"');\">・PAGE : "+ k +" ' "+resultList[i][j]+" '</a></li>");
 			}
 		}
 	}else{
 		//検索キーワードがない時
-		$('#itemList').append("Found 0 items.");
+		$('#itemList').append("---Found 0 items.------------");
 	}
 
 }

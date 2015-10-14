@@ -11,7 +11,7 @@
 
 body { /* 描画順序最奥部分 */
   overflow: hidden;
-  background: #00f; /* レイアウト最奥のカラー */
+  background: #000; /* レイアウト最奥のカラー */
 }
 
 #main { /* 全体 */

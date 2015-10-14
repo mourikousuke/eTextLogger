@@ -198,27 +198,24 @@ body { /* ビューアフレーム外 */
 
 <body>
 	<div id="main" class="main-content">
+
         <!-- div #main-navbar .main-navbar .main-navbar-fixed-top -->
 		<div id="main-sidebar" class="main-sidebar main-sidebar-left">
-			<div class="section">
+			<div class="section" style="background-color:#222;">
 				<!-- sidebar's section -->
 				<div id="jumparea">
-					PAGE JUMP : <select id="toc"></select><br>
+					PAGE JUMP : <select id="toc"></select><br><br>
 					<input type="search" id="searchTextBox" />
-					<input type="button" id="searchBtn" value="Search"/><br>
+					<a id="searchBtn" class="show_view icon-search"></a><br>
 				</div>
 			</div>
 			<nav>
-				<ul id="itemList">
-
-				</ul>
+				<ul id="itemList"></ul>
 			</nav>
 		</div>
 
-
 		<div id="titlebar">
-
-<div class="main-navbar-content">
+			<div class="main-navbar-content">
 				<div id="toggle-sidebar" class="icon left">
 					<a id="sidebar-opener" class="icon-menu" title="Sidebar"></a>
 				</div>
@@ -261,9 +258,6 @@ body { /* ビューアフレーム外 */
 		<div id="loader"><img src="../reader/img/loader.gif"></div>
 		<div class="overlay"></div>
 	</div>
-
-
-
 
 	<script>
 
