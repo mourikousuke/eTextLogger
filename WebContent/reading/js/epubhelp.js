@@ -48,7 +48,7 @@ function HighlightString() {
 		//alert("chapterNumber = "+Book.getChapter()+",Page Number ="+Book.getPage());
 
 	}catch(e){
-		alert("error");
+		alert("error : No text is selected or the range is too large.");
 	}
 }
 
@@ -110,9 +110,46 @@ function pageChangedFunc(){
 		document.getElementById("memorandum").value="";
 
 
-	//alert("you opened "+chapter+"-"+page);
+	//page number
+	setPageNumber();
 }
 
+function setPageNumber(){
+	var sel = Book.getChapter();
+	var toc = getTOCList();
+	var total = toc.length - 1;
+	if(sel!=0)
+		$("#pageNumberText").text("Chapter : "+sel+" / "+total);
+	else
+		$("#pageNumberText").text("TITLE PAGE");
+}
+
+//ウィンドウの大きさが変更された時
+function windowSizeChanged(){
+	windowWidth = window.innerWidth;
+	windowHeight = window.innerHeight;
+}
+
+function viewmodeChangeFunc(){
+	if(viewmode == 0){ //スライドビューの場合テキストビューに変更
+		$('#wrapper').css({
+			"height":"85%",
+			"max-height":"none",
+			"overflow-y":"scroll"
+		});
+		document.getElementById("viewmodechange").title='switch to "Slide Mode"';
+		viewmode = 1;
+	}else{
+		//テキストビューの場合やビューモード値が得られない場合はスライドビューに変更
+		$('#wrapper').css({
+			"height":"85%",
+			"max-height":"600px",
+			"overflow-y":"hidden"
+		});
+		document.getElementById("viewmodechange").title='switch to "Text Mode"';
+		viewmode = 0;
+	}
+}
 
 
 //to make safe range( that smaller ranges and they dosen't include any HTML tags in it)
@@ -260,7 +297,7 @@ function searchFunc(){ // 検索機能
 		var tocfilelist = getTOCList();
 		//目次に載っていた全ページのコンテンツから対応する文字を取得
 		var resultList = new Array();
-		var path = "../books/unzipped/" + paramValue + "/OPS/";
+		var path = "../books/unzipped/" + paramValue + "/"+mediaFilesName+"/";
 		var items = 0;
 		for(i = 0; i < tocfilelist.length; i++){
 			var url = path + tocfilelist[i]
@@ -280,21 +317,45 @@ function searchFunc(){ // 検索機能
 		}
 		//リストに表示
 		var display = document.getElementById('itemList');
-
-		$('#itemList').append("---Found "+ items +" items.------------");
+		$('#itemList').append("---------------------------------");
+		$('#itemList').append("<Li>Single click for open the page.</Li>");
+		$('#itemList').append("<Li>Double click for highlight the keyword.</LI>");
+		$('#itemList').append("---Found "+ items +" items.----------------");
 		for(i = 0; i < resultList.length; i++){
 			for(j = 0; j < resultList[i].length; j++){
 				var k = i+1;
 				var linkFile = tocfilelist[i];
-				$('#itemList').append("<li><a href=\"javascript:Book.gotoHref('"+linkFile+"');\">・PAGE : "+ k +" ' "+resultList[i][j]+" '</a></li>");
+				$('#itemList').append("<li><a href=\"javascript:searchResultClicked('"+linkFile+"','"+target+"');\">・PAGE : "+ k +" ' "+resultList[i][j]+" '</a></li>");
 			}
 		}
 	}else{
 		//検索キーワードがない時
-		$('#itemList').append("---Found 0 items.------------");
+		$('#itemList').append("Please input any keyword.");
 	}
 
 }
+
+//検索結果がクリックされた際の処理
+function searchResultClicked(fname, keyword){
+	Book.gotoHref(fname);
+	$('iframe').contents().find("body").highlight(keyword);
+}
+
+//メディアファイルが置かれている場所を探す
+function mediaLocationCheck(){
+	var container = getTextData("../books/unzipped/" + paramValue + "/META-INF/container.xml");
+	var path = container.split("full-path");
+	path = path[1].split("/");
+	path = path[0].split("\"");
+	return path[1];
+}
+
+//サーバ内ファイルを取得する(非同期の方法もあるが簡単にこの方法を使っている)
+function getTextData(fname){
+	var text = file_get_contents(fname);
+	return text;
+}
+
 
 //TOCリストをファイル名で取得して返す
 function getTOCList() {
@@ -574,5 +635,6 @@ function file_get_contents(url, flags, context, offset, maxLen) {
 	}
 
 function testFunc(){
+	pageChangedFunc();
 
 }

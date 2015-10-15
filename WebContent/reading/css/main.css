@@ -62,14 +62,16 @@ body { /* 描画順序最奥部分 */
 }
 
 #titlebar a { /* タイトルバー内の各種ファンクションボタン */
-  width: 18px; /* タイトルバーのファンクションボタンの幅 */
-  height: 19px; /* タイトルバーのファンクションボタンの高さ */
+  border: 1px rgba(0,0,0,.2) solid;
+  width: 50px; /* タイトルバーのファンクションボタンの幅 */
+  height: 50px; /* タイトルバーのファンクションボタンの高さ */
   line-height: 20px; /* 実質上端からのマージン */
   overflow: hidden; /* */
   display: inline-block /* */;
   opacity: .5; /* ファンクションボタンの非オンマウス時の透明度 */
   padding: 4px; /* 各ボタン間のパッディング */
   border-radius: 4px; /**/
+  cursor:pointer; /* オンマウス時のカーソルの形 */
 }
 
 #titlebar a::before {
@@ -210,7 +212,7 @@ body { /* 描画順序最奥部分 */
 #title-controls { /* ファンクションボタンが置かれるスペース */
   float: right;
   height: 30px;
-  margin: -2% 2%; /* 順に上から、右からのマージン */
+  margin: -5% 4%; /* 順に上から、右からのマージン */
 }
 
 #panels a { /* */

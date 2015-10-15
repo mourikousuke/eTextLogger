@@ -33,7 +33,8 @@
 <script src="js/libs/screenfull.min.js"></script>
 
 <!-- sidebar -->
-<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script>
+<script
+	src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script>
 <script src="simpler-sidebar/dist/jquery.simple-sidebar.min.js"></script>
 
 <!-- CSS -->
@@ -51,16 +52,13 @@ body { /* ビューアフレーム外 */
 #wrapper { /* ビューアフレーム部分(ビューアが入っているフレーム)の設定 */
 	width: 800px; /* 幅 */
 	height: 85%; /* 高さ */
-	max-height: 600px; /* 一般的なスライドの高さ意識で高さ上限600px。オーバーフローはスクロール可に */
-
+	max-height: 600px; /* この値を超えるときはこの値に合わせる(高さの上限) */
 	border: 1px solid #000; /* 枠線の色 */
-	margin: 20px auto; /* 順に上からのマージン、左からのマージン。title-controll、即ちファンクションボタンエリアサイズに合わせて可変 */
+	margin: 40px auto;
+	/* 順に上からのマージン、左からのマージン。title-controll、即ちファンクションボタンエリアサイズに合わせて可変 */
 	background: #fff; /* 背景色 */
-
-
-	overflow-x: hidden; /*横方向は枠内に入りきれない部分は隠す */
-	overflow-y: scroll; /*縦方向は枠内に入りきれない部分はスクロールして見れる */
-
+	overflow-x: hidden; /*横方向の枠内に入りきれない部分 */
+	overflow-y: hidden; /*縦方向の枠内に入りきれない部分(hidden:隠す、scroll:スクロールで見える、visible:常に見える) */
 }
 
 #area { /* ビューア部分 */
@@ -86,6 +84,10 @@ body { /* ビューアフレーム外 */
 	margin: 20px 20px; /* 順に上から、左からのマージン */
 }
 
+#pageNumberText {
+	width: 150px;
+	cursor: default;
+}
 </style>
 <script>
 	"use strict";
@@ -102,9 +104,15 @@ body { /* ビューアフレーム外 */
 	var element = query.split('=');
 	//var paramName = decodeURIComponent( element[ 0 ] );
 	var paramValue = decodeURIComponent(element[1]);
+	//メディアファイルが入るフォルダ名は任意に設定可能(OPSやOEBPSが多いが...)なので、その名前を特定する
+	var mediaFilesName = mediaLocationCheck();;
+
 	//ウィンドウサイズ
 	var windowWidth = window.innerWidth;
 	var windowHeight = window.innerHeight;
+
+	//ビューモード(0:スライドビュー、1:テキストビュー)
+	var viewmode = 0;
 
 	//描画時の幅と高さを指定
 	var Book = ePub("../books/unzipped/" + paramValue + "/", {
@@ -138,6 +146,12 @@ body { /* ビューアフレーム外 */
 		$('#searchBtn').click(function() { //検索ボタンの処理(詳細はepubhelp.js内のsaveMemo関数で定義)
 			searchFunc();
 		});
+		$('#viewmodechange').click(function() { //ビューモード切替
+			viewmodeChangeFunc();
+		});
+		$("#highlighting").click(function(){
+			HighlightString();
+		});
 		$("#memorandum").each(function(){ //メモの内容が変わった際に呼び出される処理
 			$(this).bind('keyup', memoChanged(this));
 		});
@@ -159,7 +173,9 @@ body { /* ビューアフレーム外 */
 
 			}
 		});
-
+		window.onresize=function(){ //ウィンドウサイズ変化時
+			windowSizeChanged();
+		};
 	});
 
 	Book.getMetadata().then(function(meta){
@@ -185,12 +201,6 @@ body { /* ビューアフレーム外 */
 	Book.ready.all.then(function(){
 	document.getElementById("loader").style.display = "none";
 	});
-	//サーバないファイルを取得する(非同期の方法もあるが簡単にこの方法を使っている)
-	function getTextData(fname){
-		var text = file_get_contents(fname);
-		return text;
-	}
-
 </script>
 </head>
 
@@ -198,15 +208,15 @@ body { /* ビューアフレーム外 */
 
 <body>
 	<div id="main" class="main-content">
-
-        <!-- div #main-navbar .main-navbar .main-navbar-fixed-top -->
+		<div id="pageNumberText">TITLE PAGE</div>
+		<!-- div #main-navbar .main-navbar .main-navbar-fixed-top -->
 		<div id="main-sidebar" class="main-sidebar main-sidebar-left">
-			<div class="section" style="background-color:#222;">
+			<div class="section" style="background-color: #444;">
 				<!-- sidebar's section -->
 				<div id="jumparea">
-					PAGE JUMP : <select id="toc"></select><br><br>
-					<input type="search" id="searchTextBox" />
-					<a id="searchBtn" class="show_view icon-search"></a><br>
+					PAGE JUMP : <select id="toc"></select><br> <br> <input
+						type="search" id="searchTextBox" /> <a id="searchBtn"
+						class="show_view icon-search"></a><br>
 				</div>
 			</div>
 			<nav>
@@ -217,7 +227,7 @@ body { /* ビューアフレーム外 */
 		<div id="titlebar">
 			<div class="main-navbar-content">
 				<div id="toggle-sidebar" class="icon left">
-					<a id="sidebar-opener" class="icon-menu" title="Sidebar"></a>
+					<a id="sidebar-opener" class="icon-menu" title="Sidebar">Menu</a>
 				</div>
 			</div>
 			<!--
@@ -227,25 +237,28 @@ body { /* ビューアフレーム外 */
 			</div>
 			-->
 			<div id="memoarea">
-				<textarea id="memorandum" cols="5" rows="5" style="width:90%;height:100%; font-size:18px; visibility: hidden;"></textarea>
-				<input type="button" id="saveBtn" value="SAVE" style="visibility: hidden" />
+				<textarea id="memorandum" cols="5" rows="5"
+					style="width: 90%; height: 100%; font-size: 18px; visibility: hidden;"></textarea>
+				<input type="button" id="saveBtn" value="SAVE"
+					style="visibility: hidden" />
 			</div>
 			<div id="title-controls">
 				<!-- actions are written at EPUBJS.reader.ControlsController (in reader.min.js ) -->
-				<a id="bookmark" class="icon-bookmark-empty" title="Bookmark"></a>
-				<a id="highlighting" href="javascript:HighlightString();" title="Highlight">
-					<font color="black" size="2">
-						<span style="background-color: yellow">abc</span>
-					</font>
-				</a>
-				<a id="memo" class="icon-edit" title="show/take a memo"></a>
+				<a id="bookmark" class="icon-bookmark-empty" title="Bookmark">Mark</a>
+				<a id="highlighting" title="Highlight"> <font size="2"> <span
+						style="background-color: yellow">abc</span>
+				</font> Check
+				</a> <a id="memo" class="icon-edit" title="show/take a memo">Memo</a>
 				<!-- <a id="changeview" class="icon-link" title="Reflow Mode"></a> -->
-				<a id="test" title="debug" href="javascript:testFunc();">?</a>
-				<font color="red">
-					<a id="close" class="icon-cancel-circled" title="Close"></a>
+				<a id="viewmodechange" title='switch to "Text Mode"' class="icon-link">View</a>
+				<font color="red"> <a id="close" class="icon-cancel-circled"
+					title="Close">CLOSE</a>
 				</font>
-				<div id="bookmarker" style="visibility: hidden">
-					<img src="img/bookmarker.png" />
+				<div>
+					<div id="bookmarker" style="visibility: hidden; margin: 2px;"
+						title="This page is book marked.">
+						<img src="img/bookmarker.png" />
+					</div>
 				</div>
 			</div>
 
@@ -255,7 +268,9 @@ body { /* ビューアフレーム外 */
 			<div id="area"></div>
 		</div>
 		<div id="next" onclick=" Book.nextPage();" class="arrow">></div>
-		<div id="loader"><img src="../reader/img/loader.gif"></div>
+		<div id="loader">
+			<img src="../reader/img/loader.gif">
+		</div>
 		<div class="overlay"></div>
 	</div>
 
