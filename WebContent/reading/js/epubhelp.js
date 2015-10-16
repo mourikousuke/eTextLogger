@@ -276,6 +276,30 @@ function memoChanged(elm){
 	}
 }
 
+function showBookmarkListFunc(){
+	$('#itemList').empty();
+	$('#itemList').append("---------------------------------<br>");
+	$('#itemList').append(" Bookmarks<br>");
+	$('#itemList').append("---------------------------------<br>");
+	var chapter;
+	var page;
+	var sp;
+	var memo;
+	var tocfilelist = getTOCList();
+	for(key in BookmarkedPages){
+		sp=key.split("-");
+		chapter=sp[0];
+		page=sp[1];
+		if(page==1 && BookmarkedPages[key]==true){ //pageが1以外なら同じ章でジャンプ先自体は同じになるので処理しない
+			memo=memorandum[key];
+			if(memo!=undefined)
+				$('#itemList').append("<li><a href=\"javascript:Book.gotoHref('"+tocfilelist[chapter]+"','h');\">・CHAPTER : "+ chapter +",　MEMO : "+memorandum[key]+"</a></li>");
+			else
+				$('#itemList').append("<li><a href=\"javascript:Book.gotoHref('"+tocfilelist[chapter]+"','h');\">・CHAPTER : "+ chapter +"</a></li>");
+		}
+	}
+}
+
 function searchFunc(){ // 検索機能
 	var target = document.getElementById("searchTextBox").value;
 	$('#itemList').empty();
@@ -634,7 +658,4 @@ function file_get_contents(url, flags, context, offset, maxLen) {
 	  return false;
 	}
 
-function testFunc(){
-	pageChangedFunc();
 
-}

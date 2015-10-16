@@ -128,7 +128,7 @@ body { /* 描画順序最奥部分 */
   position: absolute; /* 位置の指定方法 */
   top: 50%; /* ウィンドウ上端からの高さ(50%で画面の中央) */
   margin-top: -32px; /* 上端からのマージン */
-  font-size: 128px; /* ボタンは文字なので、このフォントサイズ(px)の指定は実質ボタンの大きさ */
+  font-size: 64px; /* ボタンは文字なので、このフォントサイズ(px)の指定は実質ボタンの大きさ */
   color: #777; /* ボタンの色(非マウスオン時) */
   font-family: arial, sans-serif; /* フォント */
   font-weight: bold; /* */

@@ -135,6 +135,7 @@
 
     <body>
     	<div id="main">
+
 			<div id="wrapper">
         		<div id="area">
               		<h1>ePub Viewer</h1>

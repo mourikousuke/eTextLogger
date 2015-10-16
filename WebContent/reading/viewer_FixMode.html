@@ -152,6 +152,9 @@ body { /* ビューアフレーム外 */
 		$("#highlighting").click(function(){
 			HighlightString();
 		});
+		$("#showBookmarkList").click(function(){
+			showBookmarkListFunc();
+		});
 		$("#memorandum").each(function(){ //メモの内容が変わった際に呼び出される処理
 			$(this).bind('keyup', memoChanged(this));
 		});
@@ -208,22 +211,27 @@ body { /* ビューアフレーム外 */
 
 <body>
 	<div id="main" class="main-content">
+		<!-- ページ番号 -->
 		<div id="pageNumberText">TITLE PAGE</div>
-		<!-- div #main-navbar .main-navbar .main-navbar-fixed-top -->
+
+		<!-- サイドバー -->
 		<div id="main-sidebar" class="main-sidebar main-sidebar-left">
 			<div class="section" style="background-color: #444;">
-				<!-- sidebar's section -->
+				<!-- サイドバー上部 -->
 				<div id="jumparea">
-					PAGE JUMP : <select id="toc"></select><br> <br> <input
-						type="search" id="searchTextBox" /> <a id="searchBtn"
-						class="show_view icon-search"></a><br>
+					PAGE JUMP : <select id="toc"></select><br> <br>
+					<input type="search" id="searchTextBox" />
+						<a id="searchBtn" class="show_view icon-search"></a>
+						<a id="showBookmarkList" class="icon-bookmark"></a><br>
 				</div>
 			</div>
+			<!-- サイドバー下部 -->
 			<nav>
 				<ul id="itemList"></ul>
 			</nav>
 		</div>
 
+		<!-- タイトルバー -->
 		<div id="titlebar">
 			<div class="main-navbar-content">
 				<div id="toggle-sidebar" class="icon left">
@@ -236,12 +244,16 @@ body { /* ビューアフレーム外 */
 				<span id="chapter-title"></span>
 			</div>
 			-->
+
+			<!-- メモ -->
 			<div id="memoarea">
 				<textarea id="memorandum" cols="5" rows="5"
 					style="width: 90%; height: 100%; font-size: 18px; visibility: hidden;"></textarea>
 				<input type="button" id="saveBtn" value="SAVE"
 					style="visibility: hidden" />
 			</div>
+
+			<!-- ファンクションボタンスペース -->
 			<div id="title-controls">
 				<!-- actions are written at EPUBJS.reader.ControlsController (in reader.min.js ) -->
 				<a id="bookmark" class="icon-bookmark-empty" title="Bookmark">Mark</a>
@@ -254,6 +266,8 @@ body { /* ビューアフレーム外 */
 				<font color="red"> <a id="close" class="icon-cancel-circled"
 					title="Close">CLOSE</a>
 				</font>
+
+				<!-- BookMark 描画位置 -->
 				<div>
 					<div id="bookmarker" style="visibility: hidden; margin: 2px;"
 						title="This page is book marked.">
@@ -263,11 +277,17 @@ body { /* ビューアフレーム外 */
 			</div>
 
 		</div>
+		<!-- 戻るボタン -->
 		<div id="prev" onclick="Book.prevPage();" class="arrow"><</div>
+
+		<!-- EPUB描画位置 -->
 		<div id="wrapper">
 			<div id="area"></div>
 		</div>
+
+		<!-- 進むボタン -->
 		<div id="next" onclick=" Book.nextPage();" class="arrow">></div>
+
 		<div id="loader">
 			<img src="../reader/img/loader.gif">
 		</div>
