@@ -212,14 +212,16 @@ body { /* ビューアフレーム外 */
 <body>
 	<div id="main" class="main-content">
 		<!-- ページ番号 -->
-		<div id="pageNumberText">TITLE PAGE</div>
+		<div>
+			PAGE JUMP : <select id="toc" style="cursor:pointer;"></select>
+			<div id="currentPage" style="border: 1px rgba(0,0,0,.2) solid;width:150px;"><div id="pageNumberText">TITLE PAGE</div></div>
+		</div>
 
 		<!-- サイドバー -->
 		<div id="main-sidebar" class="main-sidebar main-sidebar-left">
 			<div class="section" style="background-color: #444;">
 				<!-- サイドバー上部 -->
 				<div id="jumparea">
-					PAGE JUMP : <select id="toc"></select><br> <br>
 					<input type="search" id="searchTextBox" />
 						<a id="searchBtn" class="show_view icon-search"></a>
 						<a id="showBookmarkList" class="icon-bookmark"></a><br>

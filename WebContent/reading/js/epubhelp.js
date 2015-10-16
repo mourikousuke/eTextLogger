@@ -73,6 +73,7 @@ function BookmarkPage(){
 
 //this function is called when page is changed
 function pageChangedFunc(){
+	scrollReset(); //スクロール位置リセット
 	var chapter, page;
 	chapter=Book.getChapter();
 	page=Book.getPage()
@@ -131,6 +132,7 @@ function windowSizeChanged(){
 }
 
 function viewmodeChangeFunc(){
+	scrollReset(); //スクロール位置リセット
 	if(viewmode == 0){ //スライドビューの場合テキストビューに変更
 		$('#wrapper').css({
 			"height":"85%",
@@ -365,7 +367,7 @@ function searchResultClicked(fname, keyword){
 	$('iframe').contents().find("body").highlight(keyword);
 }
 
-//メディアファイルが置かれている場所を探す
+//メディアファイルが置かれているフォルダ名(現在はOEBPSやOPSが多いが任意に設定可能なので一応)を探す
 function mediaLocationCheck(){
 	var container = getTextData("../books/unzipped/" + paramValue + "/META-INF/container.xml");
 	var path = container.split("full-path");
@@ -657,5 +659,7 @@ function file_get_contents(url, flags, context, offset, maxLen) {
 	  }
 	  return false;
 	}
-
-
+//スクロールを最上部までリセット
+function scrollReset(){
+	$("#wrapper").scrollTop(0);
+}
