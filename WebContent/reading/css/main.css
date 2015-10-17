@@ -16,8 +16,8 @@ body { /* 描画順序最奥部分 */
 
 #main { /* 全体 */
   position: absolute;
-  width: 100%; /* 画面内全コンテンツの幅(この幅に入りきれない分は表示されない).100%ならウィンドウサイズに合わせる */
-  height: 100%; /* 画面内全コンテンツの高さ(この高さに入りきれない分は表示されない).100%ならウィンドウサイズに合わせる */
+  width: 98%; /* 画面内全コンテンツの幅 */
+  height: 98%; /* 画面内全コンテンツの高さ */
   right: 0px; /* 右側からの配置距離 */
   left: 0px; /* 左側からの配置距離 */
   /*   -webkit-transform: translate(40px, 0);
@@ -40,12 +40,32 @@ body { /* 描画順序最奥部分 */
   box-shadow:         inset 0 0 50px rgba(0,0,0,.1);
 }
 
+#status-bar{ /* ページ最上部ステータスバー */
+	height: 25px;
+}
+
+#jumparea { /* ステータスバー左(ジャンプ系エリア(目次ジャンプ、検索ジャンプ)) */
+	 padding:5px;
+}
+
+#pageNumberText { /* ステータスバー左 */
+	width: 150px;
+	cursor: default;
+	border: 1px rgba(0,0,0,.2) solid;
+	float:left;"
+}
+
+#bookmarker{ /* ステータスバー右(ブックマークイラスト) */
+	visibility: hidden;
+	margin: 0px;
+	text-align:right;
+	padding:2px;
+	margin:0px 20px;"
+}
 
 #titlebar { /* タイトルバー(ファンクションボタン部分) */
   width: 100%;
-  height: 2%; /* 高さ */
-  min-height: 20px; /* 上記の高さがこの値より小さい場合はこの値に */
-  padding: 10px; /* 画面右上から左下方向へのマージン */
+  height: 60px; /* 高さ */
   position: relative; /*  */
   color: #4f4f4f; /*  */
   font-weight: 100; /* */
@@ -54,8 +74,33 @@ body { /* 描画順序最奥部分 */
   -webkit-transition: opacity .5s;
   -moz-transition: opacity .5s;
   z-index: 10;
-  opacity: .8; /* 非マウスオン時のこのエリアの透明度 ( 0.0(透明)-1.0(不透明) ) */
+  /*opacity: .8; /* 非マウスオン時のこのエリアの透明度 ( 0.0(透明)-1.0(不透明) ) */
+
 }
+
+#leftmenu { /* タイトルバー左(左上メニュー) */
+	float:left;
+	width:100px; /* pxで指定 */
+	height:100%;
+}
+
+#memoarea { /* タイトルバー中央(メモエリア部分) */
+	font-size: 18px;
+	float:left;
+	overflow:visible;
+	height: 100%; /* 高さ */
+	width: -webkit-calc(100% - 100px - 300px - 70px) ; /* 100%からleftmenu(100px)とtitle-controls(300px)を引き、さらに余白分70pxを引く*/
+	min-width:100px;
+	font-size: 18px;
+}
+
+#title-controls { /* タイトルバー右(右上メニュー(ファンクションボタンが置かれるスペース)) */
+	float: right;
+	height: 60px;
+	width: 300px; /* pxで指定 */
+	margin-right:20px;
+}
+
 
 #titlebar:hover { /* タイトルバーエリアに対するオンマウス時処理 */
   opacity: 1.0; /* 上記とは逆にマウスオン時のタイトルバーエリアの透明度 */
@@ -65,11 +110,10 @@ body { /* 描画順序最奥部分 */
   border: 1px rgba(0,0,0,.2) solid;
   width: 50px; /* タイトルバーのファンクションボタンの幅 */
   height: 50px; /* タイトルバーのファンクションボタンの高さ */
-  line-height: 20px; /* 実質上端からのマージン */
+  line-height: 20px; /* ボタンのテキストのボタン上端からのマージン */
   overflow: hidden; /* */
   display: inline-block /* */;
   opacity: .5; /* ファンクションボタンの非オンマウス時の透明度 */
-  padding: 4px; /* 各ボタン間のパッディング */
   border-radius: 4px; /**/
   cursor:pointer; /* オンマウス時のカーソルの形 */
 }
@@ -81,7 +125,7 @@ body { /* 描画順序最奥部分 */
 #titlebar a:hover { /* 各種ファンクションボタンのオンマウス時 */
   opacity: 1.0;
   border: 1px rgba(0,0,0,.2) solid;
-  padding: 3px;
+  padding: 0px;
 }
 
 #titlebar a:active { /* 各種ファンクションボタンが押されてから離されるまで */
@@ -93,35 +137,33 @@ body { /* 描画順序最奥部分 */
   box-shadow: inset 0 0 6px rgba(155,155,155,.8);
 }
 
-#book-title { /* 書籍タイトル(リフロー画面) */
-  font-weight: 600;
+#wrapper { /* ビューアフレーム部分 */
+	margin-left: -webkit-calc(50% - 400px - 10px); /* 横は中央(50%)からビューの半分(800px/2=400px)を引いて、さらに左に若干空白がある(10px)のでそれを引いた位置にする */
+	width: 800px; /* 幅(描画が横幅768px固定なので、スクロールバーなどのための余白を考慮して800px) */
+	height: -webkit-calc(100% - 25px - 60px - 20px); /* 100%からstatusbar(25px)、titlebar(60px)を引き、さらに余白分20pxを引く */
+	max-height: 600px; /* この値を超えるときはこの値に合わせる(一般的なスライドの縦幅に合わせてある) */
+	border: 1px solid #000; /* 枠線の色 */
+	background: #fff; /* 背景色 */
+	overflow-x: hidden; /*横方向の枠内に入りきれない部分 */
+	overflow-y: hidden; /*縦方向の枠内に入りきれない部分(hidden:隠す、scroll:スクロールで見える、visible:常に見える) */
 }
 
-#title-seperator { /* リフロー画面用 */
-  display: none;
+#area { /* ビューア部分 */
+	padding: 2px;
+	/*
+	-moz-box-shadow: inset 10px 0 20px rgba(0, 0, 0, .1);
+	-webkit-box-shadow: inset 10px 0 20px rgba(0, 0, 0, .1);
+	box-shadow: inset 10px 0 20px rgba(0, 0, 0, .1);
+	*/
 }
 
-#viewer { /* リフロー型のビューア画面 */
-  width: 100%;
-  height: 100%;
-  /* margin-left: 10%; */
-  margin: 0 auto;
-  max-width: 1250px;
-  z-index: 2;
-  position: relative;
-  overflow: hidden;
+
+#prev { /* 戻るボタンの位置 */
+	left: 40px; /*左端からの距離*/
 }
 
-#viewer iframe { /* */
-  border: none;
-}
-
-#prev { /* 戻るボタンのためのスペース */
-  left: 40px;
-}
-
-#next { /* 進むボタンのためのスペース */
-  right: 40px;
+#next { /* 進むボタンの位置 */
+	right: 60px; /* 右端からの距離 */
 }
 
 .arrow { /* 戻るボタンと進むボタンの設定 */
@@ -134,42 +176,16 @@ body { /* 描画順序最奥部分 */
   font-weight: bold; /* */
   cursor: pointer; /* */
 }
-
 .arrow:hover { /* マウスオン時の戻るボタンと進むボタンの設定 */
   color: #000; /* マウスオン時のボタンの色 */
 }
-
 .arrow:active,
 .arrow.active { /* 戻るボタンと進むボタンのクリックしてから離されるまでの設定 */
   color: #f00; /* ボタンがクリックされてから離されるまでの色 */
 }
 
-#sidebar { /* サイドバー(リフロー型の左側)の設定 */
-  background: #6b6b6;
-  position: absolute;
-  /* left: -260px; */
-  /* -webkit-transform: translate(-260px, 0);
-  -moz-transform: translate(-260px, 0); */
-  top: 0;
-  min-width: 300px;
-  width: 25%;
-  height: 100%;
-  -webkit-transition: -webkit-transform .5s;
-  -moz-transition: -moz-transform .5s;
-
-  overflow: hidden;
-}
-
-#sidebar.open { /* サイドバー(リフロー型の左側)のopen時の設定 */
- left: 0;
- -webkit-transform: translate(0, 0);
- -moz-transform: translate(0, 0);
-}
-
-#main.closed { /* サイドバー(リフロー型の左側)のclose時の設定 */
-  /* left: 300px; */
-  -webkit-transform: translate(300px, 0);
-  -moz-transform: translate(300px, 0);
+#viewer iframe { /* */
+  border: none;
 }
 
 #main.single { /* */
@@ -199,20 +215,10 @@ body { /* 描画順序最奥部分 */
   float: left;
 }
 
-/* #opener #slider {
-  width: 25px;
-} */
-
 #metainfo { /*  */
   display: inline-block;
   text-align: center;
   max-width: 80%;
-}
-
-#title-controls { /* ファンクションボタンが置かれるスペース */
-  float: right;
-  height: 30px;
-  margin: -5% 4%; /* 順に上から、右からのマージン */
 }
 
 #panels a { /* */
@@ -248,17 +254,6 @@ body { /* 描画順序最奥部分 */
   float: left;
   margin-left: 10px;
   margin-top: -1px;
-  /*
-  border-radius: 5px;
-  background: #9b9b9b;
-  float: left;
-  margin-left: 5px;
-  margin-top: -5px;
-  padding: 3px 10px;
-  color: #000;
-  border: none;
-  outline: none; */
-
 }
 
 input::-webkit-input-placeholder { /* */
@@ -266,24 +261,6 @@ input::-webkit-input-placeholder { /* */
 }
 input:-moz-placeholder { /* */
     color: #454545;
-}
-
-#divider { /* */
-  position: absolute;
-  width: 1px;
-  border-right: 1px #000 solid;
-  height: 80%;
-  z-index: 1;
-  left: 50%;
-  margin-left: -1px;
-  top: 10%;
-  opacity: .15;
-  box-shadow: -2px 0 15px rgba(0, 0, 0, 1);
-  display: none;
-}
-
-#divider.show { /* */
-  display: block;
 }
 
 #loader { /* */

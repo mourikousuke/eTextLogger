@@ -57,12 +57,16 @@ function BookmarkPage(){
 	chapter=Book.getChapter();
 	page=Book.getPage();
 
-	if(BookmarkedPages[chapter+'-'+page] == true){
+	if(BookmarkedPages[chapter+'-'+page] == true){ // Bookmarkが外された
 		BookmarkedPages[chapter+'-'+page]=false;
-		//alert("BOOKMARK=FALSE chapterNumber = "+chapter+",Page Number ="+page);
-	}else{
+		$('#main').css({
+			"background":"#eee"
+		});
+	}else{ //Bookmarkされた
 		BookmarkedPages[chapter+'-'+page] = true;
-		//alert("BOOKMARK=TRUE chapterNumber = "+chapter+",Page Number ="+page);
+		$('#main').css({
+			"background":"#edc"
+		});
 	}
 
 	if(BookmarkedPages[chapter+"-"+page] == true)
@@ -87,10 +91,17 @@ function pageChangedFunc(){
 	if(BookmarkedPages[chapter+"-"+page] == undefined)
 		BookmarkedPages[chapter+"-"+page]=false;
 
-	if(BookmarkedPages[chapter+"-"+page] == true) //bookmarked
+	if(BookmarkedPages[chapter+"-"+page] == true){ //bookmarked
 		document.getElementById("bookmarker").style.visibility="visible";
-	else
+		$('#main').css({
+			"background":"#edc"
+		});
+	}else{
 		document.getElementById("bookmarker").style.visibility="hidden";
+		$('#main').css({
+			"background":"#eee"
+		});
+	}
 
 
 	// highlight
@@ -135,20 +146,18 @@ function viewmodeChangeFunc(){
 	scrollReset(); //スクロール位置リセット
 	if(viewmode == 0){ //スライドビューの場合テキストビューに変更
 		$('#wrapper').css({
-			"height":"85%",
-			"max-height":"none",
+			"max-height":"1100px",
 			"overflow-y":"scroll"
 		});
-		document.getElementById("viewmodechange").title='switch to "Slide Mode"';
+		document.getElementById("viewmodechange").title='switch to "Slide Viewer Mode"';
 		viewmode = 1;
 	}else{
 		//テキストビューの場合やビューモード値が得られない場合はスライドビューに変更
 		$('#wrapper').css({
-			"height":"85%",
 			"max-height":"600px",
 			"overflow-y":"hidden"
 		});
-		document.getElementById("viewmodechange").title='switch to "Text Mode"';
+		document.getElementById("viewmodechange").title='switch to "Text Viewer Mode"';
 		viewmode = 0;
 	}
 }

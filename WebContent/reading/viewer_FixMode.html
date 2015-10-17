@@ -41,54 +41,9 @@
 <!-- <link rel="stylesheet" href="basic.css"> -->
 <link rel="stylesheet" href="css/main.css">
 <link rel="stylesheet" href="css/normalize.css">
-<link rel="stylesheet" href="css/popup.css">
 <link rel="stylesheet" type="text/css" href="css/sidebar-style.css">
 
-<style type="text/css">
-body { /* ビューアフレーム外 */
-	overflow: no;
-}
 
-#wrapper { /* ビューアフレーム部分(ビューアが入っているフレーム)の設定 */
-	width: 800px; /* 幅 */
-	height: 85%; /* 高さ */
-	max-height: 600px; /* この値を超えるときはこの値に合わせる(高さの上限) */
-	border: 1px solid #000; /* 枠線の色 */
-	margin: 40px auto;
-	/* 順に上からのマージン、左からのマージン。title-controll、即ちファンクションボタンエリアサイズに合わせて可変 */
-	background: #fff; /* 背景色 */
-	overflow-x: hidden; /*横方向の枠内に入りきれない部分 */
-	overflow-y: hidden; /*縦方向の枠内に入りきれない部分(hidden:隠す、scroll:スクロールで見える、visible:常に見える) */
-}
-
-#area { /* ビューア部分 */
-	margin: -5px auto; /*それぞれ上、左からのマージン*/
-	/* 影を付ける */ /*
-	-moz-box-shadow: inset 10px 0 20px rgba(0, 0, 0, .1);
-	-webkit-box-shadow: inset 10px 0 20px rgba(0, 0, 0, .1);
-	box-shadow: inset 10px 0 20px rgba(0, 0, 0, .1);
-	*/
-	padding: 5px 5px;
-}
-
-#memoarea { /* メモエリア部分 */
-	height: 100%; /* 高さ */
-	width: 50%; /* 幅 */
-	margin: 0 auto;
-	font-size: 18px;
-	overflow: visible;
-	/* opacity: .5; */
-}
-
-#jumparea { /* ジャンプ系エリア(目次ジャンプ、検索ジャンプ) */
-	margin: 20px 20px; /* 順に上から、左からのマージン */
-}
-
-#pageNumberText {
-	width: 150px;
-	cursor: default;
-}
-</style>
 <script>
 	"use strict";
 	var oldChapter = 0, oldPage = 1;
@@ -158,7 +113,7 @@ body { /* ビューアフレーム外 */
 		$("#memorandum").each(function(){ //メモの内容が変わった際に呼び出される処理
 			$(this).bind('keyup', memoChanged(this));
 		});
-		$('html').keyup(function(e){
+		$('body').keyup(function(e){
 			switch(e.which){
 				case 37: // 「←」を押したとき
 					Book.prevPage();
@@ -211,20 +166,27 @@ body { /* ビューアフレーム外 */
 
 <body>
 	<div id="main" class="main-content">
-		<!-- ページ番号 -->
-		<div>
-			PAGE JUMP : <select id="toc" style="cursor:pointer;"></select>
-			<div id="currentPage" style="border: 1px rgba(0,0,0,.2) solid;width:150px;"><div id="pageNumberText">TITLE PAGE</div></div>
+		<!-- 最上部のステータスバー -->
+		<div id="status-bar" style="width:100%;">
+			<div id="pageNumberText">TITLE PAGE</div>
+			<!-- ブックマークイメージ描画位置 -->
+				<div>
+					<div id="bookmarker" title="This page is book marked.">
+						<img src="img/bookmarker.png" />
+					</div>
+				</div>
 		</div>
+
 
 		<!-- サイドバー -->
 		<div id="main-sidebar" class="main-sidebar main-sidebar-left">
 			<div class="section" style="background-color: #444;">
 				<!-- サイドバー上部 -->
 				<div id="jumparea">
-					<input type="search" id="searchTextBox" />
-						<a id="searchBtn" class="show_view icon-search"></a>
-						<a id="showBookmarkList" class="icon-bookmark"></a><br>
+					PAGE JUMP : <select id="toc" style="cursor:pointer; height:50px; font-size:16px;"></select><br><br>
+					<input type="search" id="searchTextBox" style="height:40px;"/>
+					<a id="searchBtn" class="show_view icon-search"></a>
+					<a id="showBookmarkList" class="icon-bookmark"></a><br>
 				</div>
 			</div>
 			<!-- サイドバー下部 -->
@@ -235,86 +197,63 @@ body { /* ビューアフレーム外 */
 
 		<!-- タイトルバー -->
 		<div id="titlebar">
-			<div class="main-navbar-content">
+			<!-- 左上メニュー -->
+			<div id="leftmenu" class="main-navbar-content">
 				<div id="toggle-sidebar" class="icon left">
 					<a id="sidebar-opener" class="icon-menu" title="Sidebar">Menu</a>
 				</div>
 			</div>
-			<!--
-			<div id="metainfo">
-				<span id="book-title"></span> <span id="title-seperator">&nbsp;&nbsp;?&nbsp;&nbsp;</span>
-				<span id="chapter-title"></span>
-			</div>
-			-->
 
-			<!-- メモ -->
+			<!-- 中央メモエリア -->
 			<div id="memoarea">
-				<textarea id="memorandum" cols="5" rows="5"
-					style="width: 90%; height: 100%; font-size: 18px; visibility: hidden;"></textarea>
-				<input type="button" id="saveBtn" value="SAVE"
-					style="visibility: hidden" />
+				<textarea id="memorandum" cols="5" rows="5" style="height: 80%; max-height: 300%; width:-webkit-calc(95% - 100px); max-width:-webkit-calc(95% - 100px); visibility: hidden;"></textarea>
+				<input type="button" id="saveBtn" value="SAVE" style="visibility: hidden; width:60px;" />
 			</div>
 
-			<!-- ファンクションボタンスペース -->
+
+			<!-- 右上メニュー -->
 			<div id="title-controls">
-				<!-- actions are written at EPUBJS.reader.ControlsController (in reader.min.js ) -->
+				<!-- EPUBJS.reader.ControlsController (reader.min.jsの中)にこの項目の動作の一部が書かれている -->
 				<a id="bookmark" class="icon-bookmark-empty" title="Bookmark">Mark</a>
-				<a id="highlighting" title="Highlight"> <font size="2"> <span
-						style="background-color: yellow">abc</span>
-				</font> Check
-				</a> <a id="memo" class="icon-edit" title="show/take a memo">Memo</a>
-				<!-- <a id="changeview" class="icon-link" title="Reflow Mode"></a> -->
-				<a id="viewmodechange" title='switch to "Text Mode"' class="icon-link">View</a>
-				<font color="red"> <a id="close" class="icon-cancel-circled"
-					title="Close">CLOSE</a>
-				</font>
-
-				<!-- BookMark 描画位置 -->
-				<div>
-					<div id="bookmarker" style="visibility: hidden; margin: 2px;"
-						title="This page is book marked.">
-						<img src="img/bookmarker.png" />
-					</div>
-				</div>
+				<a id="highlighting" title="Highlight"> <font size="2"> <span style="background-color: yellow">abc</span></font> Check</a>
+				<a id="memo" class="icon-edit" title="show/take a memo">Memo</a>
+				<a id="viewmodechange" title='switch to "Text Viewer Mode"' class="icon-link">View</a>
+				<font color="red"><a id="close" class="icon-cancel-circled" title="Close">Close</a></font>
 			</div>
-
 		</div>
+
 		<!-- 戻るボタン -->
 		<div id="prev" onclick="Book.prevPage();" class="arrow"><</div>
-
 		<!-- EPUB描画位置 -->
 		<div id="wrapper">
 			<div id="area"></div>
 		</div>
-
 		<!-- 進むボタン -->
 		<div id="next" onclick=" Book.nextPage();" class="arrow">></div>
+	</div>
 
-		<div id="loader">
-			<img src="../reader/img/loader.gif">
-		</div>
-		<div class="overlay"></div>
+	<!-- 読み込み時のローダー -->
+	<div id="loader">
+		<img src="../reader/img/loader.gif">
 	</div>
 
 	<script>
-
 	$(document).ready(function() {
-        $('#main-sidebar').simpleSidebar({
-            opener: '#toggle-sidebar',
-            wrapper: '#main',
-            animation: {
-                easing: "easeOutQuint"
-            },
-            sidebar: {
-                align: 'left',
-                closingLinks: '.close-sb',
-            },
-            sbWrapper: {
-                display: true
-            }
-        });
-    });
-
+		$('#main-sidebar').simpleSidebar({
+			opener: '#toggle-sidebar',
+			wrapper: '#main',
+			animation: {
+				easing: "easeOutQuint"
+			},
+			sidebar: {
+				align: 'left',
+				closingLinks: '.close-sb',
+			},
+			sbWrapper: {
+				display: true
+			}
+		});
+	});
 		Book.renderTo("area").then(function() {
 
 		});
